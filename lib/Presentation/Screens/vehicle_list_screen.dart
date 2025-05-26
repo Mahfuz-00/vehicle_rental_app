@@ -36,8 +36,15 @@ class VehicleListScreen extends StatelessWidget {
             if (state is VehicleListLoading) {
               return const Center(child: CircularProgressIndicator());
             } else if (state is VehicleListLoaded) {
-              return ListView.builder(
+              return GridView.builder(
+                padding: const EdgeInsets.all(2),
                 itemCount: state.vehicles.length,
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,              // 2 items per row
+                  crossAxisSpacing: 1,           // space between columns
+                  mainAxisSpacing: 1,            // space between rows
+                  childAspectRatio: 0.95,         // adjust height/width ratio of each card
+                ),
                 itemBuilder: (context, index) {
                   return VehicleCard(vehicle: state.vehicles[index]);
                 },

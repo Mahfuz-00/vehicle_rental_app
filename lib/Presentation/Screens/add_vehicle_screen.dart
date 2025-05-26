@@ -37,10 +37,62 @@ class _AddVehicleScreenState extends State<AddVehicleScreen> {
               child: SingleChildScrollView(
                 child: Column(
                   children: [
-                    CustomTextField(controller: _idController, label: 'ID'),
+                    // CustomTextField(controller: _idController, label: 'ID'),
                     CustomTextField(controller: _nameController, label: 'Name'),
-                    CustomTextField(controller: _typeController, label: 'Type'),
-                    CustomTextField(controller: _statusController, label: 'Status'),
+                    DropdownButtonFormField<String>(
+                      value: _typeController.text.isNotEmpty ? _typeController.text : null,
+                      decoration: InputDecoration(
+                        labelText: 'Type',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide: const BorderSide(width: 1, color: Colors.grey), // 1 width border
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide: const BorderSide(width: 1, color: Colors.grey),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide: const BorderSide(width: 1, color: Colors.blue), // Optional focus color
+                        ),
+                      ),
+                       items: const ['Car', 'Bike', 'Scooter'].map((type) {
+                        return DropdownMenuItem(value: type, child: Text(type));
+                      }).toList(),
+                      onChanged: (value) {
+                        setState(() {
+                          _typeController.text = value!;
+                        });
+                      },
+                    ),
+                    SizedBox(height: 8,),
+                    DropdownButtonFormField<String>(
+                      value: _statusController.text.isNotEmpty ? _statusController.text : null,
+                      decoration: InputDecoration(
+                        labelText: 'Status',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide: const BorderSide(width: 1, color: Colors.grey), // 1 width border
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide: const BorderSide(width: 1, color: Colors.grey),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide: const BorderSide(width: 1, color: Colors.blue), // Optional focus color
+                        ),
+                      ),
+                      items: const ['Available', 'Unavailable'].map((status) {
+                        return DropdownMenuItem(value: status, child: Text(status));
+                      }).toList(),
+                      onChanged: (value) {
+                        setState(() {
+                          _statusController.text = value!;
+                        });
+                      },
+                    ),
+
                     CustomTextField(controller: _imageController, label: 'Image URL'),
                     CustomTextField(controller: _batteryController, label: 'Battery (%)', keyboardType: TextInputType.number),
                     CustomTextField(controller: _latController, label: 'Latitude', keyboardType: TextInputType.number),

@@ -1,15 +1,16 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../Core/Navigation/app_router.dart';
-import '../../Core/Widgets/custom_button.dart';
 import '../../Core/Widgets/error_widget.dart';
+import '../../Core/Widgets/custom_button.dart';
+import '../../Core/Navigation/app_router.dart';
 import '../Bloc/Vehicle Details Bloc/vehicle_details_bloc.dart';
 import '../Bloc/Vehicle Details Bloc/vehicle_details_event.dart';
 import '../Bloc/Vehicle Details Bloc/vehicle_details_state.dart';
 
-
 class VehicleDetailScreen extends StatelessWidget {
+  const VehicleDetailScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     final String? vehicleId = ModalRoute.of(context)!.settings.arguments as String?;
@@ -25,9 +26,21 @@ class VehicleDetailScreen extends StatelessWidget {
       appBar: AppBar(title: const Text('Vehicle Details')),
       body: Column(
         children: [
-          // AppRouter.buildTopBar(context, 'John Doe'), // Replace with dynamic user name
           Expanded(
-            child: BlocBuilder<VehicleDetailBloc, VehicleDetailState>(
+            child: BlocConsumer<VehicleDetailBloc, VehicleDetailState>(
+              listener: (context, state) {
+                if (state is VehicleDetailRentalStarted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(state.message),
+                      duration: const Duration(seconds: 2),
+                    ),
+                  );
+                  Future.delayed(const Duration(seconds: 2), () {
+                    Navigator.pop(context); // Return to VehicleListScreen
+                  });
+                }
+              },
               builder: (context, state) {
                 if (state is VehicleDetailLoading) {
                   return const Center(child: CircularProgressIndicator());
@@ -40,13 +53,15 @@ class VehicleDetailScreen extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           CachedNetworkImage(
-                            imageUrl: vehicle.image,
+                            imageUrl: vehicle.image.isNotEmpty
+                                ? vehicle.image
+                                : 'https://firebasestorage.googleapis.com/v0/b/vehicle-rental-app-675fb.appspot.com/o/vehicles%2Fdefault.jpg?alt=media',
                             height: 200,
                             width: double.infinity,
                             fit: BoxFit.cover,
                             placeholder: (context, url) => const Center(child: CircularProgressIndicator()),
                             errorWidget: (context, url, error) => Image.asset(
-                              'Assets/Images/placeholder.png', // Fallback local image
+                              'Assets/Images/placeholder.png',
                               height: 200,
                               width: double.infinity,
                               fit: BoxFit.cover,
@@ -63,12 +78,18 @@ class VehicleDetailScreen extends StatelessWidget {
                           Text('Location: (${vehicle.location['lat']}, ${vehicle.location['lng']})'),
                           Text('Cost: \$${vehicle.costPerMinute}/minute'),
                           const SizedBox(height: 16),
-                          CustomButton(
-                            text: 'Start Rental',
-                            onPressed: () {
-                              context.read<VehicleDetailBloc>().add(StartRental(vehicleId));
-                            },
-                          ),
+                          if (vehicle.status.toLowerCase() == 'available')
+                            CustomButton(
+                              text: 'Start Rental',
+                              onPressed: () {
+                                context.read<VehicleDetailBloc>().add(StartRental(vehicleId));
+                              },
+                            ),
+                          if (vehicle.status.toLowerCase() != 'available')
+                            const Text(
+                              'This vehicle is currently unavailable for rental.',
+                              style: TextStyle(color: Colors.red, fontStyle: FontStyle.italic),
+                            ),
                         ],
                       ),
                     ),

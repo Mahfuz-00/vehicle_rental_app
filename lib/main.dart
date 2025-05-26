@@ -1,5 +1,12 @@
+import 'dart:io';
+import 'dart:math';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_app_check/firebase_app_check.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'Common/firebase_option.dart';
 import 'Core/Dependency Injection/dependency_injection.dart';
 import 'Core/Navigation/app_router.dart';
 import 'Domain/Usecases/add_vehicle_usecase.dart';
@@ -22,9 +29,20 @@ import 'Presentation/Screens/vehicle_details_screen.dart';
 import 'presentation/screens/splash_screen.dart';
 import 'presentation/screens/vehicle_list_screen.dart';
 import 'presentation/screens/login_screen.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:path/path.dart' as path;
 
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  // Check if Firebase is already initialized
+  if (Firebase.apps.isEmpty) {
+    await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+    // Initialize App Check
+    // await FirebaseAppCheck.instance.activate(
+    //   androidProvider: AndroidProvider.playIntegrity, // Use Play Integrity
+    // );
+  };
   setupDi();
   runApp(MyApp());
 }

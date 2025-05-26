@@ -1,11 +1,12 @@
+import '../Repositories/rental_repository.dart';
 import '../Repositories/vehicle_repository.dart';
 
 class StartRentalUseCase {
-  final VehicleRepository repository;
+  final RentalRepository repository;
 
   StartRentalUseCase(this.repository);
 
-  Future<String> execute(String id) async {
-    return await repository.startRental(id);
+  Future<String> call(String vehicleId) async {
+    return await repository.startRental(vehicleId);
   }
 }
