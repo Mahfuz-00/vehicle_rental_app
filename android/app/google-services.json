@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "113578205977",
+    "project_id": "vehicle-rental-app-675fb",
+    "storage_bucket": "vehicle-rental-app-675fb.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:113578205977:android:db7a072132ccfb318f9b88",
+        "android_client_info": {
+          "package_name": "com.mahfuz.car_trip_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAs7z73ai_Ry-pgfaY-riMOJTnoxDd5qIk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
